@@ -6,13 +6,13 @@ REM only run this script when there is no rostopic or rosbag running
 for /f "tokens=2" %%P in ('
   tasklist /fi "Imagename eq rostopic.*" /fo list ^| findstr /b "PID:"
 ') do (
-  echo Error! Please run this script without any running instance of rostopic!
+  echo Error^! Please run this script without any running instance of rostopic^!
   exit /b 1
 )
 for /f "tokens=2" %%P in ('
   tasklist /fi "Imagename eq rosbag.*" /fo list ^| findstr /b "PID:"
 ') do (
-  echo Error! Please run this script without any running instance of rosbag!
+  echo Error^! Please run this script without any running instance of rosbag^!
   exit /b 1
 )
 
@@ -22,6 +22,7 @@ if exist %TEMPDIR% (
     rd /s /q %TEMPDIR%
   )
 )
+mkdir %TEMPDIR%
 set BAG_FILE=%TEMPDIR%\imu_record.bag
 set CAL_FILE=%TEMPDIR%\mag_config.yaml
 set CAL_FINAL_PATH=%ROS_ETC_DIR%\jackal_base
@@ -29,7 +30,7 @@ set DURATION=60
 
 call rostopic list >nul
 if not "%errorlevel%" == "0" (
-  echo ROS appears not to be running. Please start ROS service!
+  echo ROS appears not to be running. Please start ROS service^!
   exit /b 1
 )
 
