@@ -286,6 +286,7 @@ void JackalDiagnosticUpdater::wirelessMonitorCallback(const ros::TimerEvent& te)
   {
     // https://docs.microsoft.com/en-us/windows/win32/api/iptypes/ns-iptypes-_ip_adapter_addresses_lh
     // use IF_TYPE_IEEE80211 for 802.11 wireless network
+    // win32 code path does not consume the wireless_interface_ variable
     if (address->IfType == IF_TYPE_IEEE80211 && address->OperStatus == IF_OPER_STATUS::IfOperStatusUp)
     {
       wifi_connected_msg.data = true;
