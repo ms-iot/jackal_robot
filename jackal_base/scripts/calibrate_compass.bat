@@ -16,16 +16,16 @@ for /f "tokens=2" %%P in ('
   exit /b 1
 )
 
-set TEMPDIR=%temp%\jackal.calibrate_compass
+set TEMPDIR="%temp%\jackal.calibrate_compass"
 if exist %TEMPDIR% (
   if exist %TEMPDIR%\nul (
     rd /s /q %TEMPDIR%
   )
 )
 mkdir %TEMPDIR%
-set BAG_FILE=%TEMPDIR%\imu_record.bag
-set CAL_FILE=%TEMPDIR%\mag_config.yaml
-set CAL_FINAL_PATH=%ROS_ETC_DIR%\jackal_base
+set BAG_FILE="%TEMPDIR%\imu_record.bag"
+set CAL_FILE="%TEMPDIR%\mag_config.yaml"
+set CAL_FINAL_PATH="%ROS_ETC_DIR%\jackal_base"
 set DURATION=60
 
 call rostopic list >nul
@@ -43,6 +43,7 @@ if not "%errorlevel%" == "0" (
 start rosbag record /tf /imu/rpy/raw /imu/data_raw /imu/mag -O %BAG_FILE% --duration %DURATION%
 echo Started rosbag record, duration %DURATION% seconds
 
+REM todo: calibrate against hard iron (external metal structure) and soft iron (metal on robot)
 start rostopic pub /cmd_vel geometry_msgs/Twist "{linear:  {x: 0.0, y: 0.0, z: 0.0}, angular: {x: 0.0,y: 0.0,z: 0.2}}" -r 15 >nul
 echo Started motion commands
 
@@ -84,15 +85,17 @@ if not "%errorlevel%" == "0" (
   exit /b 1
 )
 
+(set _RESPONSE=)
 if exist %CAL_FILE% (
   echo Calibration generated in %CAL_FILE%.
+  set /p _RESPONSE=Copy calibration to %CAL_FINAL_PATH%? [Y/n] || set response=Y
+)
 
-  set /p response=Copy calibration to %CAL_FINAL_PATH%? [Y/n] || set response=Y
-
-  if %response:~0,1% == n (
+if defined _RESPONSE (
+  if "%_RESPONSE:~0,1%" == "n" (
     echo Skipping.
   ) else (
-    if %response:~0,1% == N (
+    if "%_RESPONSE:~0,1%" == "N" (
       echo Skipping.
     ) else (
       mkdir %CAL_FINAL_PATH%
