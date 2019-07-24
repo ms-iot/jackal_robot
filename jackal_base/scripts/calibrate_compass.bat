@@ -43,7 +43,6 @@ if not "%errorlevel%" == "0" (
 start rosbag record /tf /imu/rpy/raw /imu/data_raw /imu/mag -O %BAG_FILE% --duration %DURATION%
 echo Started rosbag record, duration %DURATION% seconds
 
-REM todo: calibrate against hard iron (external metal structure) and soft iron (metal on robot)
 start rostopic pub /cmd_vel geometry_msgs/Twist "{linear:  {x: 0.0, y: 0.0, z: 0.0}, angular: {x: 0.0,y: 0.0,z: 0.2}}" -r 15 >nul
 echo Started motion commands
 
